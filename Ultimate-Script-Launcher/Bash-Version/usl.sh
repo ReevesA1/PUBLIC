@@ -73,9 +73,15 @@ echo -e "\033[0;32mGit credential timeout is now set to 24 hours.\033[0m"
 #!#############################
 #!       Choose a repo       ##
 #!#############################
-echo -e "\033[32mPlease enter your Github Username:\033[0m"
-read GIT_USERNAME
-repo_url=$(gh repo list $GIT_USERNAME --json url --jq '.[] | "\(.url)"' | gum choose --height 20)
+#* abstract Username method
+#echo -e "\033[32mPlease enter your Github Username:\033[0m"
+#read GIT_USERNAME
+#repo_url=$(gh repo list $GIT_USERNAME --json url --jq '.[] | "\(.url)"' | gum choose --height 20)
+#*Plain Text Usernam Method
+repo_url=$(gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20)
+
+#* I do not have to abstact here since I will call the script with the abstraction in the Notion Public Homepage with this next line
+#todo -> gh api repos/ReevesA1/PUBLIC/contents/Ultimate-Script-Launcher/Bash-Version/usl.sh | jq -r '.content' | base64 --decode | bash
 
 # Extract the owner and repo from the URL
 owner=$(echo $repo_url | cut -d'/' -f4)
@@ -107,4 +113,11 @@ file_path=$(choose_file_or_dir $file_path)
 #!#####################################################
 #!       Decode and execute the chosen script        ##
 #!#####################################################
-gh api repos/$owner/$repo/contents/$file_path | jq -r '.content' | base64 --decode | bash
+file_content=$(gh api repos/$owner/$repo/contents/$file_path | jq -r '.content' | base64 --decode)
+
+# Check if the file is a .md file
+if [[ $file_path == *.md ]]; then
+  echo "$file_content" | glow
+else
+  echo "$file_content" | bash
+fi
