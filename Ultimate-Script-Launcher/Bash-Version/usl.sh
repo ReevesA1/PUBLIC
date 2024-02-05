@@ -80,8 +80,10 @@ echo -e "\033[0;32mGit credential timeout is now set to 24 hours.\033[0m"
 #*Plain Text Usernam Method
 repo_url=$(gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20)
 
-#* I do not have to abstact here since I will call the script with the abstraction in the Notion Public Homepage with this next line
-#todo -> gh api repos/ReevesA1/PUBLIC/contents/Ultimate-Script-Launcher/Bash-Version/usl.sh | jq -r '.content' | base64 --decode | bash
+#* I do not have to abstact username here since I will call the script with the abstraction in the Notion Public Homepage with this next line
+#todo - this is the one liner
+#echo -e "\033[32mPlease enter your Github Username:\033[0m"; read GIT_USERNAME; gh api repos/$GIT_USERNAME/PUBLIC/contents/Ultimate-Script-Launcher/Bash-Version/usl.sh | jq -r '.content' | base64 --decode | bash
+
 
 # Extract the owner and repo from the URL
 owner=$(echo $repo_url | cut -d'/' -f4)
