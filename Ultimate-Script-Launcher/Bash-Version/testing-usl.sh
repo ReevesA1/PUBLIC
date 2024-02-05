@@ -1,64 +1,6 @@
 #!/usr/bin/env bash
 
-#!#####################
-#!       Gum Style   ##
-#!#####################
 
-gum style \
-  --foreground 212 --border-foreground 255 --border double \
-  --align center --width 50 --margin "1 2" --padding "2 4" \
-  'ULTIMATE SCRIPT LAUNCHER'
-
-#!################################
-#!     Install Dependencies     ##
-#!################################
-
-check_and_install() {
-  local package=$1
-  if ! command -v $package &>/dev/null; then
-    echo -e "\033[0;32mInstalling $package...\033[0m"
-    sudo apt install $package
-  else
-    echo -e "\033[0;32m$package is installed\033[0m"
-  fi
-}
-
-# Check if Github aka gh, git, and jq are installed
-check_and_install "gh"
-check_and_install "git"
-check_and_install "jq"
-
-#!#############################
-#!       Install Gum         ##
-#!#############################
-#* Check if gum is installed
-if ! command -v gum &>/dev/null; then
-  echo -e "\033[0;32mInstalling git...\033[0m"
-  sudo mkdir -p /etc/apt/keyrings
-  sudo curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-  sudo echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
-  sudo apt update && sudo apt install gum
-else
-  echo -e "\033[0;32mgum is installed\033[0m"
-fi
-
-#!##################################
-#!       Login to GH              ##
-#!##################################
-
-#variable
-auth_status=$(gh auth status 2>&1)
-
-if echo "$auth_status" | grep -q "Logged in to"; then
-  echo -e "\033[0;32mYou are already logged in to GitHub.\033[0m"
-else
-  echo -e "\033[1;33mYou are not logged in to GitHub. Let's log you in.\033[0m"
-  gh auth login
-fi
-
-#* Set Git credential timeout to 24 hours (Not sure if I even need this at all?)
-#  git config --global credential.helper 'cache --timeout=86400'
-echo -e "\033[0;32mGit credential timeout is now set to 24 hours.\033[0m"
 
 #*########################################################################################################################
 #*########################################################################################################################
