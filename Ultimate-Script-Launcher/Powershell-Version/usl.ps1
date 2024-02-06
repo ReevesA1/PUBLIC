@@ -1,6 +1,4 @@
-#Set-PSDebug -Trace 1
-
-
+Set-PSDebug -Trace 1
 # Choose a repo
 $repo_url = gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20
 
@@ -40,24 +38,19 @@ $file_content = gh api repos/$owner/$repo/contents/$file_path | ConvertFrom-Json
 # Check if the file is a .md file
 if ($file_path -like "*.md") {
   write-output $file_content | glow
-}
-elseif ($file_path -like "*.ps1") {
+} elseif ($file_path -like "*.ps1") {
   try {
     Invoke-Expression -Command $file_content
-  }
-  catch {
+  } catch {
     Write-Host "An error occurred while executing the PowerShell script: $_" -ForegroundColor Red
   }
-}
-elseif ($file_path -like "*.sh") {
+} elseif ($file_path -like "*.sh") {
   Clear-Host
   Write-Host "Bash scripts do not work on Windows" -ForegroundColor Red
-}
-else {
+} else {
   try {
     Invoke-Expression -Command $file_content
-  }
-  catch {
+  } catch {
     Write-Host "An error occurred while executing the script: $_" -ForegroundColor Red
   }
 }
