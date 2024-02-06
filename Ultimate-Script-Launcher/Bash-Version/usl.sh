@@ -8,9 +8,10 @@
 #!#####################
 
 gum style \
-  --foreground 212 --border-foreground 255 --border double \
-  --align center --width 50 --margin "1 2" --padding "2 4" \
-  'ULTIMATE SCRIPT LAUNCHER'
+--foreground 190 --border-foreground 50 --border double \
+--align center --width 70 --margin "1" --padding "1" \
+--bold \
+'⚡⚡⚡⚡⚡ BASH ULTIMATE SCRIPT LAUNCHER ⚡⚡⚡⚡⚡'
 
 #!################################
 #!     Install Dependencies     ##

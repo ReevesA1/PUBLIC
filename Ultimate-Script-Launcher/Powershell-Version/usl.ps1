@@ -6,7 +6,7 @@ gum style `
 --foreground 190 --border-foreground 50 --border double `
 --align center --width 70 --margin "1" --padding "1" `
 --bold `
-'⚡⚡⚡⚡⚡ RocketOS-2 ⚡⚡⚡⚡⚡'
+'⚡⚡⚡⚡⚡ PWSH ULTIMATE SCRIPT LAUNCHER ⚡⚡⚡⚡⚡'
 
 # Choose a repository
 $repo_url = gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20
