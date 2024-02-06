@@ -1,56 +1,35 @@
-Set-PSDebug -Trace 1
-# Choose a repo
+# Choose a repository
 $repo_url = gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20
 
 # Extract the owner and repo from the URL
 $owner, $repo = $repo_url.Split('/')[3..4]
 
-# Function to choose a file or directory within the repository
-function choose_file_or_dir {
+function Explore_Repo {
   param($path)
-  $items = gh api repos/$owner/$repo/contents/$path | ConvertFrom-Json | ForEach-Object { $_.path }
 
-  # If there are no items, return the path
-  if (!$items) {
-    Clear-Host
-    return $path
+  # URL encode the path
+  $encodedPath = [System.Web.HttpUtility]::UrlEncode($path)
+
+  # Fetch the contents of the path
+  $contents = gh api repos/$owner/$repo/contents/$encodedPath | ConvertFrom-Json
+
+  # If the path is a directory, let the user select a file or subdirectory
+  if (($contents | Measure-Object).Count -gt 1 -or $contents.type -eq "dir") {
+    $selectedPath = $contents | ForEach-Object { $_.path } | gum choose --height 20
+
+    # Recursively explore the selected path
+    Explore_Repo -path $selectedPath
+  }
+  elseif ($path -like "*.ps1") {
+    # If it's a PowerShell script, download and execute it
+    $base64Content = gh api repos/$owner/$repo/contents/$encodedPath --jq '.content'
+    $decodedContent = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Content))
+    Invoke-Expression -Command $decodedContent
   }
   else {
-    Clear-Host
-    # If there are items, choose one and recurse
-    $new_path = $items | gum choose --height 20
-    choose_file_or_dir $new_path
+    Write-Output "The selected path is not a directory or a PowerShell script."
   }
 }
 
-# Choose a file or directory within the repository
-Clear-Host
-$file_path = gh api repos/$owner/$repo/contents | ConvertFrom-Json | ForEach-Object { $_.path } | gum choose --height 20
-
-# Recursively choose a file if a directory is chosen
-while ((gh api repos/$owner/$repo/contents/$file_path | ConvertFrom-Json | ForEach-Object { $_.type }) -eq 'dir') {
-  $file_path = choose_file_or_dir $file_path
-}
-
-# Decode and execute the chosen script
-$file_content = gh api repos/$owner/$repo/contents/$file_path | ConvertFrom-Json | ForEach-Object { $_.content } | ForEach-Object { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) }
-
-# Check if the file is a .md file
-if ($file_path -like "*.md") {
-  write-output $file_content | glow
-} elseif ($file_path -like "*.ps1") {
-  try {
-    Invoke-Expression -Command $file_content
-  } catch {
-    Write-Host "An error occurred while executing the PowerShell script: $_" -ForegroundColor Red
-  }
-} elseif ($file_path -like "*.sh") {
-  Clear-Host
-  Write-Host "Bash scripts do not work on Windows" -ForegroundColor Red
-} else {
-  try {
-    Invoke-Expression -Command $file_content
-  } catch {
-    Write-Host "An error occurred while executing the script: $_" -ForegroundColor Red
-  }
-}
+# Start exploring from the root of the repository
+Explore_Repo -path ""
