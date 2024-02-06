@@ -1,3 +1,7 @@
+#* Powershell ONE LINER with abstract Username
+#Write-Host "Please enter your Github Username:" -ForegroundColor Green; $GIT_USERNAME = Read-Host; $base64Content = Invoke-RestMethod -Uri "https://api.github.com/repos/$GIT_USERNAME/PUBLIC/contents/Ultimate-Script-Launcher/Powershell-Version/usl.ps1" | Select-Object -ExpandProperty content; $decodedContent = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Content)); Invoke-Expression -Command $decodedContent
+
+
 # Choose a repository
 $repo_url = gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20
 

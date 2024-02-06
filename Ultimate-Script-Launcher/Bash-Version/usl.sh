@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#*BASH ONE LINER with abstract Username
+#echo -e "\033[32mPlease enter your Github Username:\033[0m"; read GIT_USERNAME; gh api repos/$GIT_USERNAME/PUBLIC/contents/Ultimate-Script-Launcher/Bash-Version/usl.sh | jq -r '.content' | base64 --decode | bash
+
 #!#####################
 #!       Gum Style   ##
 #!#####################
