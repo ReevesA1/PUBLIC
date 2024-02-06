@@ -1,3 +1,4 @@
+Set-PSDebug -Trace 1
 # Choose a repo
 $repo_url = gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20
 
