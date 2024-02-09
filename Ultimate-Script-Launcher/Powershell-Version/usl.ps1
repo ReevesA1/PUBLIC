@@ -3,10 +3,10 @@
 
 
 gum style `
---foreground 190 --border-foreground 50 --border double `
---align center --width 70 --margin "1" --padding "1" `
---bold `
-'⚡⚡⚡⚡⚡ PWSH ULTIMATE SCRIPT LAUNCHER ⚡⚡⚡⚡⚡'
+  --foreground 190 --border-foreground 50 --border double `
+  --align center --width 70 --margin "1" --padding "1" `
+  --bold `
+  '⚡⚡⚡⚡⚡ PWSH ULTIMATE SCRIPT LAUNCHER ⚡⚡⚡⚡⚡'
 
 # Choose a repository
 $repo_url = gh repo list ReevesA1 --json url --jq '.[] | "\(.url)"' | gum choose --height 20
@@ -37,7 +37,7 @@ function Explore_Repo {
     Invoke-Expression -Command $decodedContent
   }
   else {
-    Write-Output "The selected path is not a directory or a PowerShell script."
+    Write-Host "The selected path is not a directory or a PowerShell script." -ForegroundColor Yellow
   }
 }
 
